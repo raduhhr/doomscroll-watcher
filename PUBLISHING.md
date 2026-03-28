@@ -65,9 +65,8 @@ The extension currently keeps all logic and assets local. It does not intentiona
 
 Before submitting, sanity-check these:
 
-1. `UR.jpeg` and the Underground Resistance MP3 may raise intellectual-property review issues if you do not have the rights to use them in a public store listing/package.
-2. Some citation text references sexual violence, genocide, racism, and child-safety issues. That is not automatically disallowed, but it may trigger closer content review.
-3. Your screenshots and store description should clearly describe the extension as a scroll blocker, not as an official tool for Instagram, Facebook, LinkedIn, Meta, Microsoft, or Chrome.
+1. Some citation text references sexual violence, genocide, racism, and child-safety issues. That is not automatically disallowed, but it may trigger closer content review.
+2. Your screenshots and store description should clearly describe the extension as a scroll blocker, not as an official tool for Instagram, Facebook, LinkedIn, Meta, Microsoft, or Chrome.
 
 ## Store Submission Flow
 
