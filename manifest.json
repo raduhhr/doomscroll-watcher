@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Doomscroll Punisher",
+  "version": "0.2.0",
+  "description": "A tiny Chromium extension that blocks scrolling completely on selected social sites.",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.instagram.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.facebook.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "sounds/*"
+      ],
+      "matches": [
+        "*://*.instagram.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.facebook.com/*"
+      ]
+    }
+  ]
+}

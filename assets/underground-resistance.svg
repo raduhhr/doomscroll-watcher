@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Underground Resistance</title>
+  <desc id="desc">Black square with large white UR letters above the words Underground Resistance.</desc>
+  <rect width="900" height="900" fill="#020202"/>
+  <g fill="#f5f3ef">
+    <path d="M176 88h126v413l30 30h74l30-30V88h126v465l-91 91H267l-91-91V88z"/>
+    <path d="M505 88h217l91 91v165l-52 52 52 52v196H687V474h-56v170H505V88zm126 118v150h78l30-30v-90l-30-30h-78z"/>
+  </g>
+  <g fill="#f5f3ef" font-family="Arial Black, Impact, sans-serif" font-size="88" font-weight="900" text-anchor="middle" letter-spacing="2">
+    <text x="450" y="726">UNDERGROUND</text>
+    <text x="450" y="820">RESISTANCE</text>
+  </g>
+</svg>
