@@ -7,7 +7,9 @@
 
   const FEEDBACK_COOLDOWN_MS = 1500;
   const OVERLAY_DURATION_MS = 60000;
-  const AUDIO_START_SECONDS = 51;
+  const AUDIO_START_SECONDS = 43;
+  const AUDIO_RETRY_DELAY_MS = 250;
+  const AUDIO_MAX_RETRY_ATTEMPTS = 8;
   const RESNAPSHOT_DELAY_MS = 80;
   const SCAN_DEBOUNCE_MS = 150;
   const ROOT_LOCK_ATTRIBUTE = "data-doomscroll-punisher-root-locked";
@@ -21,12 +23,17 @@
     " ",
   ]);
   const SHAME_DATA = window.__doomscrollPunisherShameData || {};
+  const runtimeApi = globalThis.chrome?.runtime || globalThis.browser?.runtime;
 
-  const audioUrl = chrome.runtime.getURL(
+  if (!runtimeApi || typeof runtimeApi.getURL !== "function") {
+    return;
+  }
+
+  const audioUrl = runtimeApi.getURL(
     "assets/Underground Resistance - Electronic Warfare ( Vocal ).mp3"
   );
-  const imageUrl = chrome.runtime.getURL("assets/UR.jpeg");
-  const fallbackImageUrl = chrome.runtime.getURL("assets/underground-resistance.svg");
+  const imageUrl = runtimeApi.getURL("assets/UR.jpeg");
+  const fallbackImageUrl = runtimeApi.getURL("assets/underground-resistance.svg");
   const overlayId = "doomscroll-punisher-overlay";
   const styleId = "doomscroll-punisher-style";
   const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
@@ -35,10 +42,14 @@
     lastFeedbackAt: 0,
     overlayTimer: 0,
     overlayCountdownTimer: 0,
+    progressBarTimer: 0,
+    audioRetryTimer: 0,
     resnapshotTimer: 0,
     scanTimer: 0,
     lockedElements: new Map(),
     observer: null,
+    audioElementUnlocked: false,
+    audioPrimePromise: null,
   };
 
   let audioElement = null;
@@ -70,6 +81,7 @@
           radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.06), transparent 24%),
           radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.04), transparent 28%),
           linear-gradient(180deg, rgba(6, 6, 8, 0.78), rgba(3, 3, 5, 0.94));
+        -webkit-backdrop-filter: blur(10px) saturate(0.1);
         backdrop-filter: blur(10px) saturate(0.1);
         opacity: 0;
         pointer-events: none;
@@ -349,7 +361,6 @@
           inset 0 -1px 0 rgba(46, 28, 108, 0.62),
           inset 0 1px 0 rgba(208, 192, 255, 0.24);
         image-rendering: pixelated;
-        transition: width 60s steps(120, end);
       }
 
       @media (max-width: 680px) {
@@ -384,7 +395,7 @@
 
       @media (max-width: 520px) {
         #${overlayId} .doomscroll-punisher-head {
-          flex-direction: column;
+          grid-template-columns: minmax(0, 1fr);
           align-items: flex-start;
         }
 
@@ -427,6 +438,9 @@
     audioElement = document.createElement("audio");
     audioElement.preload = "auto";
     audioElement.src = audioUrl;
+    audioElement.playsInline = true;
+    audioElement.muted = false;
+    audioElement.volume = 1;
     audioElement.style.display = "none";
     document.documentElement.appendChild(audioElement);
     return audioElement;
@@ -470,6 +484,87 @@
     return audioBufferPromise;
   }
 
+  function primeAudioForPlayback(unlockMediaElement = false) {
+    preloadAudioElement();
+    preloadAudioBuffer();
+
+    if (unlockMediaElement && !state.audioElementUnlocked && !state.audioPrimePromise) {
+      try {
+        const audio = ensureAudio();
+        audio.muted = true;
+        audio.volume = 0;
+
+        const unlockAttempt = audio.play();
+        if (unlockAttempt && typeof unlockAttempt.then === "function") {
+          state.audioPrimePromise = unlockAttempt
+            .then(() => {
+              audio.pause();
+              state.audioElementUnlocked = true;
+            })
+            .catch(() => {
+              // Ignore unlock failures and rely on the Web Audio path.
+            })
+            .finally(() => {
+              try {
+                audio.muted = false;
+                audio.volume = 1;
+                audio.currentTime =
+                  Number.isFinite(audio.duration) && audio.duration > AUDIO_START_SECONDS
+                    ? AUDIO_START_SECONDS
+                    : 0;
+              } catch (_error) {
+                // Ignore reset failures; the next playback attempt will reposition if possible.
+              }
+
+              state.audioPrimePromise = null;
+            });
+        } else {
+          audio.pause();
+          audio.muted = false;
+          audio.volume = 1;
+          state.audioElementUnlocked = true;
+        }
+      } catch (_error) {
+        // Ignore media-element unlock failures and keep the rest of the extension working.
+      }
+    }
+
+    if (!AudioContextCtor) {
+      return;
+    }
+
+    try {
+      audioContext = audioContext || new AudioContextCtor();
+      if (audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
+    } catch (_error) {
+      // Ignore audio context failures and keep the rest of the extension working.
+    }
+  }
+
+  function clearAudioRetry() {
+    window.clearTimeout(state.audioRetryTimer);
+    state.audioRetryTimer = 0;
+  }
+
+  function scheduleAudioRetry(attempt) {
+    if (attempt >= AUDIO_MAX_RETRY_ATTEMPTS) {
+      return;
+    }
+
+    clearAudioRetry();
+    state.audioRetryTimer = window.setTimeout(() => {
+      state.audioRetryTimer = 0;
+
+      if (!document.getElementById(overlayId)) {
+        return;
+      }
+
+      playSound(attempt + 1);
+    }, AUDIO_RETRY_DELAY_MS);
+  }
+
   function stopBufferSource() {
     if (!activeBufferSource) {
       return;
@@ -492,55 +587,72 @@
 
     try {
       audioContext = audioContext || new AudioContextCtor();
+
+      const startTone = () => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        const startAt = audioContext.currentTime;
+
+        oscillator.type = "sawtooth";
+        oscillator.frequency.setValueAtTime(900, startAt);
+        oscillator.frequency.linearRampToValueAtTime(440, startAt + 0.32);
+
+        gainNode.gain.setValueAtTime(0.0001, startAt);
+        gainNode.gain.exponentialRampToValueAtTime(0.12, startAt + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.35);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.start(startAt);
+        oscillator.stop(startAt + 0.35);
+      };
+
       if (audioContext.state === "suspended") {
-        audioContext.resume().catch(() => {});
+        audioContext.resume().then(startTone).catch(() => {});
+        return;
       }
 
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      const startAt = audioContext.currentTime;
-
-      oscillator.type = "sawtooth";
-      oscillator.frequency.setValueAtTime(900, startAt);
-      oscillator.frequency.linearRampToValueAtTime(440, startAt + 0.32);
-
-      gainNode.gain.setValueAtTime(0.0001, startAt);
-      gainNode.gain.exponentialRampToValueAtTime(0.12, startAt + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.35);
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.start(startAt);
-      oscillator.stop(startAt + 0.35);
+      startTone();
     } catch (_error) {
       // Ignore audio failures so the visual warning still appears.
     }
   }
 
-  function playSound() {
+  function playSound(attempt = 0) {
+    clearAudioRetry();
+
     const playAudioElement = () => {
       try {
         const audio = ensureAudio();
         if (audio.readyState < 1) {
+          scheduleAudioRetry(attempt);
           return false;
         }
 
         audio.pause();
+        audio.muted = false;
+        audio.volume = 1;
         audio.currentTime =
           Number.isFinite(audio.duration) && audio.duration > AUDIO_START_SECONDS
             ? AUDIO_START_SECONDS
             : 0;
 
         const playPromise = audio.play();
-        if (playPromise && typeof playPromise.catch === "function") {
+        if (playPromise && typeof playPromise.then === "function") {
           playPromise.catch(() => {
-            playFallbackTone();
+            if (attempt === 0) {
+              playFallbackTone();
+            }
+            scheduleAudioRetry(attempt);
           });
         }
         return true;
       } catch (_error) {
-        playFallbackTone();
+        if (attempt === 0) {
+          playFallbackTone();
+        }
+        scheduleAudioRetry(attempt);
         return false;
       }
     };
@@ -585,7 +697,9 @@
     if (audioBuffer) {
       playBuffer().catch(() => {
         if (!playAudioElement()) {
-          playFallbackTone();
+          if (attempt === 0) {
+            playFallbackTone();
+          }
         }
       });
       return;
@@ -597,10 +711,16 @@
 
     preloadAudioElement();
     preloadAudioBuffer();
-    playFallbackTone();
+    if (attempt === 0) {
+      playFallbackTone();
+    }
   }
 
   function stopSound() {
+    window.clearInterval(state.progressBarTimer);
+    state.progressBarTimer = 0;
+    clearAudioRetry();
+
     stopBufferSource();
 
     if (!audioElement) {
@@ -734,6 +854,7 @@
     state.lastFeedbackAt = now;
     window.clearTimeout(state.overlayTimer);
     window.clearInterval(state.overlayCountdownTimer);
+    window.clearInterval(state.progressBarTimer);
 
     const shameEntry = getShameEntry();
     const sourceMarkup = getSourceMarkup(shameEntry);
@@ -813,23 +934,33 @@
       countdown.textContent = `${remainingSeconds}s remaining`;
     }
 
+    function updateProgressBar() {
+      const elapsedMs = Date.now() - startedAt;
+      const remainingPercent = Math.max(
+        0,
+        100 - (elapsedMs / OVERLAY_DURATION_MS) * 100
+      );
+      progressBar.style.width = `${remainingPercent}%`;
+    }
+
     updateCountdown();
+    updateProgressBar();
     document.documentElement.appendChild(overlay);
     overlay.classList.add("is-visible");
-
-    window.requestAnimationFrame(() => {
-      progressBar.style.width = "0%";
-    });
 
     state.overlayCountdownTimer = window.setInterval(() => {
       updateCountdown();
     }, 1000);
+    state.progressBarTimer = window.setInterval(() => {
+      updateProgressBar();
+    }, 100);
 
     state.overlayTimer = window.setTimeout(() => {
       window.clearInterval(state.overlayCountdownTimer);
       state.overlayCountdownTimer = 0;
-      progressBar.style.transition = "none";
-      progressBar.style.width = "100%";
+      window.clearInterval(state.progressBarTimer);
+      state.progressBarTimer = 0;
+      progressBar.style.width = "0%";
       stopSound();
       overlay.remove();
     }, OVERLAY_DURATION_MS);
@@ -980,11 +1111,13 @@
   }
 
   function handleBlockedWheel(event) {
+    primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
   }
 
   function handleBlockedTouchMove(event) {
+    primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
   }
@@ -998,11 +1131,14 @@
       return;
     }
 
+    primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
   }
 
   function handleBlockedScroll(event) {
+    primeAudioForPlayback();
+
     const target =
       event.target === document
         ? document.scrollingElement || document.documentElement
@@ -1027,6 +1163,10 @@
     restoreSnapshot(document.documentElement);
     showFeedback();
     event.stopImmediatePropagation();
+  }
+
+  function handleAudioUnlockGesture() {
+    primeAudioForPlayback(true);
   }
 
   function wrapHistoryMethod(methodName) {
@@ -1084,6 +1224,24 @@
   preloadAudioElement();
   preloadAudioBuffer();
 
+  window.addEventListener("pointerdown", handleAudioUnlockGesture, true);
+  window.addEventListener("pointerup", handleAudioUnlockGesture, true);
+  window.addEventListener("mousedown", handleAudioUnlockGesture, true);
+  window.addEventListener("mouseup", handleAudioUnlockGesture, true);
+  window.addEventListener("click", handleAudioUnlockGesture, true);
+  window.addEventListener("touchstart", handleAudioUnlockGesture, {
+    capture: true,
+    passive: true,
+  });
+  window.addEventListener("touchend", handleAudioUnlockGesture, {
+    capture: true,
+    passive: true,
+  });
+  window.addEventListener("keydown", handleAudioUnlockGesture, true);
+  document.addEventListener("focusin", handleAudioUnlockGesture, true);
+  document.addEventListener("input", handleAudioUnlockGesture, true);
+  document.addEventListener("change", handleAudioUnlockGesture, true);
+  document.addEventListener("submit", handleAudioUnlockGesture, true);
   window.addEventListener("wheel", handleBlockedWheel, {
     capture: true,
     passive: false,

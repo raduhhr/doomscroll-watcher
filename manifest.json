@@ -12,8 +12,11 @@
   "content_scripts": [
     {
       "matches": [
+        "*://instagram.com/*",
         "*://*.instagram.com/*",
+        "*://linkedin.com/*",
         "*://*.linkedin.com/*",
+        "*://facebook.com/*",
         "*://*.facebook.com/*"
       ],
       "js": [
@@ -30,8 +33,11 @@
         "sounds/*"
       ],
       "matches": [
+        "*://instagram.com/*",
         "*://*.instagram.com/*",
+        "*://linkedin.com/*",
         "*://*.linkedin.com/*",
+        "*://facebook.com/*",
         "*://*.facebook.com/*"
       ]
     }
