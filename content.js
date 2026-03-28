@@ -20,277 +20,7 @@
     "End",
     " ",
   ]);
-  const SHAME_DATA = {
-    "linkedin.com": [
-      {
-        id: "li_01",
-        text: "LinkedIn was fined \u20ac310M by Ireland's data regulator over targeted advertising practices that lacked a valid legal basis under GDPR.",
-        source: "Reuters / Irish DPC",
-        date: "2024-10-24",
-        type: "privacy-fine",
-        scope: "linkedin"
-      },
-      {
-        id: "li_02",
-        text: "LinkedIn says some member data, including profile details and public posts, can be used to train generative AI models in certain regions; private messages are excluded.",
-        source: "LinkedIn Help",
-        date: "2025-11-03",
-        type: "ai-data-use",
-        scope: "linkedin"
-      },
-      {
-        id: "li_03",
-        text: "LinkedIn says some regions can also have additional LinkedIn data shared with Microsoft for more personalized ads, with an opt-out in settings.",
-        source: "LinkedIn Help",
-        date: "2025-11-03",
-        type: "cross-company-data-sharing",
-        scope: "linkedin"
-      },
-      {
-        id: "li_04",
-        text: "LinkedIn agreed to a $6.625M settlement with advertisers who said it inflated video-ad metrics and overcharged them.",
-        source: "Reuters",
-        date: "2024-07-26",
-        type: "ad-metrics-settlement",
-        scope: "linkedin"
-      },
-      {
-        id: "li_05",
-        text: "LinkedIn settled an antitrust suit by agreeing to stop enforcing certain API contract terms that plaintiffs said blocked potential rivals and reduced competition.",
-        source: "Reuters",
-        date: "2025-07-14",
-        type: "antitrust-settlement",
-        scope: "linkedin"
-      },
-      {
-        id: "li_06",
-        text: "LinkedIn said profile data posted for sale online had been scraped from LinkedIn and other sites; it said this was not a breach, but scraped LinkedIn data was involved.",
-        source: "Reuters / LinkedIn",
-        date: "2021-04-09",
-        type: "scraping",
-        scope: "linkedin"
-      },
-      {
-        id: "li_07",
-        text: "LinkedIn agreed to a $13M settlement over its 'Add Connections' feature after users said it sent repeated invitations to contacts without clear consent.",
-        source: "Time / Reuters",
-        date: "2015-10-06",
-        type: "spam-settlement",
-        scope: "linkedin"
-      }
-    ],
-
-    "facebook.com": [
-      {
-        id: "fb_01",
-        text: "The FTC imposed a record $5B penalty on Facebook for violating a 2012 privacy order and misleading users about their control over personal information.",
-        source: "FTC",
-        date: "2019-07-24",
-        type: "privacy-fine",
-        scope: "facebook"
-      },
-      {
-        id: "fb_02",
-        text: "Facebook said the Cambridge Analytica scandal affected up to 87 million users.",
-        source: "Reuters",
-        date: "2018-04-05",
-        type: "privacy-scandal",
-        scope: "facebook"
-      },
-      {
-        id: "fb_03",
-        text: "Facebook agreed to pay $650M to settle Illinois biometric privacy claims over facial recognition and photo-tagging.",
-        source: "Reuters",
-        date: "2022-01-26",
-        type: "biometric-settlement",
-        scope: "facebook"
-      },
-      {
-        id: "fb_04",
-        text: "EU regulators fined Meta \u20ac91M after some Facebook user passwords were stored in plaintext on internal systems.",
-        source: "Reuters",
-        date: "2024-09-27",
-        type: "security-fine",
-        scope: "facebook"
-      },
-      {
-        id: "fb_05",
-        text: "EU regulators fined Meta \u20ac251M over a 2018 Facebook security breach that exposed data from 29 million accounts.",
-        source: "Reuters",
-        date: "2024-12-17",
-        type: "breach-fine",
-        scope: "facebook"
-      },
-      {
-        id: "fb_06",
-        text: "A federal judge let claims proceed that Meta Pixel on hospital and healthcare sites captured and transmitted sensitive patient information to Meta/Facebook.",
-        source: "Reuters",
-        date: "2023-09-08",
-        type: "medical-privacy-litigation",
-        scope: "facebook"
-      },
-      {
-        id: "fb_07",
-        text: "The Markup reported hospital websites using Meta Pixel were sending Facebook information about appointments, prescriptions, and medical conditions.",
-        source: "The Markup",
-        date: "2022-06-16",
-        type: "medical-privacy-reporting",
-        scope: "facebook"
-      },
-      {
-        id: "fb_08",
-        text: "Facebook allowed advertisers to target anti-Semitic audience categories such as 'Jew haters' before removing them after public scrutiny.",
-        source: "ProPublica",
-        date: "2017-09-14",
-        type: "ad-targeting-abuse",
-        scope: "facebook"
-      }
-    ],
-
-    "instagram.com": [
-      {
-        id: "ig_01",
-        text: "A New Mexico jury found Meta violated state consumer-protection law over safety claims about Facebook, Instagram and WhatsApp, and awarded $375M in civil penalties.",
-        source: "Reuters",
-        date: "2026-03-24",
-        type: "consumer-protection-verdict",
-        scope: "instagram"
-      },
-      {
-        id: "ig_02",
-        text: "A Los Angeles jury found Meta negligent in designing Instagram and found it failed to adequately warn users about the platform's dangers in a youth social-media addiction case.",
-        source: "Reuters",
-        date: "2026-03-25",
-        type: "negligence-verdict",
-        scope: "instagram"
-      },
-      {
-        id: "ig_03",
-        text: "Leaked internal research showed Meta knew Instagram harmed the mental health of some teens.",
-        source: "Reuters",
-        date: "2021-09-30",
-        type: "internal-research",
-        scope: "instagram"
-      },
-      {
-        id: "ig_04",
-        text: "Internal Meta research reviewed by Reuters found teens who often felt bad about their bodies after using Instagram saw far more eating-disorder-adjacent content than other teens.",
-        source: "Reuters",
-        date: "2025-10-20",
-        type: "internal-research",
-        scope: "instagram"
-      },
-      {
-        id: "ig_05",
-        text: "The EU fined Meta \u20ac200M over its 'pay or consent' model covering Facebook and Instagram under the Digital Markets Act.",
-        source: "Reuters",
-        date: "2025-04-23",
-        type: "competition-fine",
-        scope: "instagram"
-      }
-    ],
-
-    "_scope": {
-      "meta": [
-        {
-          id: "meta_01",
-          text: "The FTC appealed the dismissal of its antitrust case seeking to unwind Meta's Instagram and WhatsApp acquisitions.",
-          source: "Reuters",
-          date: "2026-01-20",
-          type: "antitrust-case",
-          scope: "meta"
-        },
-        {
-          id: "meta_02",
-          text: "EU regulators hit Meta with a record \u20ac1.2B fine over transfers of European user data to the United States.",
-          source: "Reuters",
-          date: "2023-05-22",
-          type: "privacy-fine",
-          scope: "meta"
-        },
-        {
-          id: "meta_03",
-          text: "Australia's privacy watchdog settled with Meta for A$50M over the old Facebook quiz-app data scandal.",
-          source: "Reuters",
-          date: "2024-12-17",
-          type: "privacy-settlement",
-          scope: "meta"
-        },
-        {
-          id: "meta_04",
-          text: "Meta let rival AI chatbots onto WhatsApp in Italy after an antitrust order, while the authority kept investigating.",
-          source: "Reuters",
-          date: "2026-03-05",
-          type: "antitrust-investigation",
-          scope: "meta"
-        }
-      ],
-
-      "microsoft": [
-        {
-          id: "ms_01",
-          text: "The U.S. government's landmark antitrust case accused Microsoft of illegally maintaining its operating-system monopoly and tying Internet Explorer to Windows.",
-          source: "U.S. DOJ",
-          date: "1998-05-18",
-          type: "antitrust-history",
-          scope: "microsoft"
-        },
-        {
-          id: "ms_02",
-          text: "EU regulators formally charged Microsoft with abusive bundling of Teams with Office.",
-          source: "Reuters",
-          date: "2024-06-25",
-          type: "antitrust-charge",
-          scope: "microsoft"
-        },
-        {
-          id: "ms_03",
-          text: "Microsoft avoided an EU antitrust fine by offering lower prices for Office without Teams and interoperability concessions.",
-          source: "Reuters",
-          date: "2025-09-12",
-          type: "antitrust-remedy",
-          scope: "microsoft"
-        },
-        {
-          id: "ms_04",
-          text: "The UK competition authority said the dominance of Amazon and Microsoft in cloud computing was harming competition.",
-          source: "Reuters",
-          date: "2025-07-31",
-          type: "competition-concern",
-          scope: "microsoft"
-        },
-        {
-          id: "ms_05",
-          text: "Reuters reported the FTC was ramping up scrutiny of Microsoft's AI, cloud, and bundling practices.",
-          source: "Reuters",
-          date: "2026-02-13",
-          type: "regulatory-scrutiny",
-          scope: "microsoft"
-        }
-      ]
-    },
-
-    "_people": {
-      "bill_gates": [
-        {
-          id: "gates_01",
-          text: "Reuters reported Bill Gates met Jeffrey Epstein multiple times after Epstein's prison term to discuss philanthropy; Gates later called the relationship a huge mistake.",
-          source: "Reuters",
-          date: "2026-02-25",
-          type: "association",
-          scope: "person"
-        },
-        {
-          id: "gates_02",
-          text: "The Gates Foundation said it never employed Epstein and made no financial payments to him.",
-          source: "Reuters",
-          date: "2026-02-11",
-          type: "clarification",
-          scope: "person"
-        }
-      ]
-    }
-  };
+  const SHAME_DATA = window.__doomscrollPunisherShameData || {};
 
   const audioUrl = chrome.runtime.getURL(
     "assets/Underground Resistance - Electronic Warfare ( Vocal ).mp3"
@@ -313,6 +43,9 @@
 
   let audioElement = null;
   let audioContext = null;
+  let audioBuffer = null;
+  let audioBufferPromise = null;
+  let activeBufferSource = null;
 
   function ensureStyle() {
     if (document.getElementById(styleId)) {
@@ -334,11 +67,10 @@
         place-items: center;
         padding: clamp(18px, 4vw, 42px);
         background:
-          radial-gradient(circle at 50% 14%, rgba(124, 92, 255, 0.12), transparent 24%),
-          radial-gradient(circle at 12% 88%, rgba(68, 127, 255, 0.12), transparent 28%),
-          radial-gradient(circle at 88% 18%, rgba(181, 120, 255, 0.08), transparent 24%),
-          linear-gradient(180deg, rgba(7, 8, 16, 0.72), rgba(4, 5, 12, 0.92));
-        backdrop-filter: blur(22px) saturate(0.78);
+          radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.06), transparent 24%),
+          radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.04), transparent 28%),
+          linear-gradient(180deg, rgba(6, 6, 8, 0.78), rgba(3, 3, 5, 0.94));
+        backdrop-filter: blur(10px) saturate(0.1);
         opacity: 0;
         pointer-events: none;
         touch-action: none;
@@ -352,35 +84,73 @@
 
       #${overlayId} .doomscroll-punisher-card {
         position: relative;
-        width: min(920px, calc(100vw - 28px));
-        border: 1px solid rgba(158, 168, 255, 0.14);
-        border-radius: 34px;
-        padding: clamp(28px, 4vw, 44px);
-        background:
-          linear-gradient(180deg, rgba(14, 15, 28, 0.985), rgba(8, 9, 20, 0.985));
+        width: min(1120px, calc(100vw - 16px));
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: clamp(26px, 4vw, 42px);
+        background: #000000;
         box-shadow:
-          0 34px 120px rgba(0, 0, 0, 0.46),
-          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+          0 22px 72px rgba(0, 0, 0, 0.44),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
         text-align: left;
-        color: #f3f2ff;
+        color: #e7e4ea;
         font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
         overflow: hidden;
         animation: doomscroll-punisher-arrive 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      #${overlayId} .doomscroll-punisher-card,
+      #${overlayId} .doomscroll-punisher-card * {
+        pointer-events: none;
+      }
+
+      #${overlayId} .doomscroll-punisher-source-link {
+        color: inherit;
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.18em;
+        pointer-events: auto !important;
+        touch-action: auto;
+        cursor: pointer;
+      }
+
+      #${overlayId} .doomscroll-punisher-source-link:hover,
+      #${overlayId} .doomscroll-punisher-source-link:focus-visible {
+        color: rgba(228, 220, 238, 0.84);
+        outline: none;
       }
 
       #${overlayId} .doomscroll-punisher-card::before {
         content: "";
         position: absolute;
         inset: 0 auto 0 0;
-        width: 8px;
-        background: linear-gradient(180deg, #111322 0%, #5747d6 46%, #6ab0ff 100%);
+        width: 4px;
+        background: linear-gradient(180deg, #111111 0%, #7d7d7d 56%, #f0f0f0 100%);
+      }
+
+      #${overlayId} .doomscroll-punisher-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.012) 0 1px,
+            rgba(255, 255, 255, 0) 1px 3px
+          );
+        mix-blend-mode: screen;
+        opacity: 0.35;
+        pointer-events: none;
       }
 
       #${overlayId} .doomscroll-punisher-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 28px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 18px 24px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
 
       #${overlayId} .doomscroll-punisher-head-copy {
@@ -388,49 +158,52 @@
       }
 
       #${overlayId} img {
-        width: min(460px, 100%);
-        height: auto;
-        max-height: 340px;
+        width: 138%;
+        height: 138%;
+        max-height: none;
         display: block;
         margin: 0 auto;
-        object-fit: contain;
-        border-radius: 24px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 0;
         background: transparent;
         box-shadow: none;
+        filter: grayscale(1) contrast(1.2) brightness(1.06);
+        transform: scale(2.2);
       }
 
       #${overlayId} .doomscroll-punisher-kicker {
         display: block;
-        color: #8eb5ff;
-        font-size: 12px;
+        color: rgba(232, 224, 238, 0.76);
+        font-size: 13px;
         font-weight: 700;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.28em;
         text-transform: uppercase;
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
       #${overlayId} .doomscroll-punisher-countdown {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 122px;
-        padding: 11px 18px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
-        color: #edf2ff;
-        font-size: 12px;
+        min-width: 0;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #e4e0e8;
+        font-size: 15px;
         font-weight: 700;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        box-shadow:
-          inset 0 0 0 1px rgba(160, 172, 255, 0.12),
-          0 8px 20px rgba(2, 5, 18, 0.28);
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
       #${overlayId} .doomscroll-punisher-body {
-        display: flex;
-        flex-direction: column;
-        gap: 34px;
-        margin-top: 30px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(340px, 0.95fr);
+        gap: clamp(24px, 3vw, 40px);
+        align-items: center;
+        margin-top: 28px;
       }
 
       #${overlayId} .doomscroll-punisher-copy {
@@ -438,63 +211,94 @@
       }
 
       #${overlayId} .doomscroll-punisher-intro {
-        margin: 0 0 18px;
-        color: #8eb5ff;
+        margin: 0 0 14px;
+        color: rgba(225, 219, 232, 0.7);
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.2em;
         text-transform: uppercase;
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
       #${overlayId} .doomscroll-punisher-text {
         margin: 0;
         font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Georgia", serif;
-        font-size: clamp(28px, 3.1vw, 40px);
-        line-height: 1.12;
+        font-size: clamp(32px, 3.25vw, 52px);
+        line-height: 1.04;
         letter-spacing: -0.03em;
-        color: #f6f5ff;
-        max-width: 16ch;
+        color: #e6e1e8;
+        max-width: none;
+        text-wrap: pretty;
       }
 
       #${overlayId} .doomscroll-punisher-source {
         display: block;
-        margin-top: 22px;
-        color: rgba(212, 218, 255, 0.66);
+        margin-top: 18px;
+        color: rgba(201, 193, 205, 0.54);
         font-size: 12px;
         line-height: 1.55;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
       #${overlayId} .doomscroll-punisher-media {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 2px 0 4px;
+        align-self: stretch;
+        min-height: 100%;
       }
 
       #${overlayId} .doomscroll-punisher-media-panel {
-        width: min(100%, 620px);
-        padding: clamp(26px, 3vw, 38px);
-        border-radius: 34px;
-        background:
-          radial-gradient(circle at 50% 20%, rgba(122, 94, 255, 0.14), transparent 42%),
-          linear-gradient(180deg, rgba(18, 19, 34, 0.98), rgba(10, 11, 22, 0.98));
-        border: 1px solid rgba(165, 177, 255, 0.08);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: clamp(420px, 40vw, 560px);
+        padding: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #000000;
+        border: 0;
         box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.03),
-          0 22px 58px rgba(0, 0, 0, 0.32);
+          inset 0 1px 0 rgba(255, 255, 255, 0.02),
+          0 12px 34px rgba(0, 0, 0, 0.28);
+        isolation: isolate;
+      }
+
+      #${overlayId} .doomscroll-punisher-media-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0)),
+          repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.018) 0 1px,
+            rgba(255, 255, 255, 0) 1px 3px
+          );
+        pointer-events: none;
+      }
+
+      #${overlayId} .doomscroll-punisher-media-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 0;
+        pointer-events: none;
       }
 
       #${overlayId} .doomscroll-punisher-footer {
-        margin-top: 30px;
+        margin-top: 22px;
       }
 
       #${overlayId} .doomscroll-punisher-rule {
         height: 1px;
-        margin-bottom: 16px;
-        background: linear-gradient(90deg, rgba(168, 178, 255, 0.16), rgba(168, 178, 255, 0));
+        margin-bottom: 12px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
       }
 
       #${overlayId} .doomscroll-punisher-progress-meta {
@@ -502,7 +306,7 @@
         justify-content: space-between;
         align-items: center;
         gap: 16px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
 
       #${overlayId} .doomscroll-punisher-progress-label,
@@ -511,43 +315,61 @@
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
       #${overlayId} .doomscroll-punisher-progress-label {
-        color: #8eb5ff;
+        color: rgba(224, 217, 232, 0.74);
       }
 
       #${overlayId} .doomscroll-punisher-progress-note {
-        color: rgba(210, 216, 255, 0.58);
+        color: rgba(192, 185, 200, 0.48);
         text-align: right;
       }
 
       #${overlayId} .doomscroll-punisher-progress {
         width: 100%;
-        height: 7px;
+        height: 28px;
         overflow: hidden;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0;
+        padding: 3px;
+        background: #0f0f12;
+        box-shadow:
+          inset 0 0 0 1px rgba(220, 212, 230, 0.16),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+          0 0 0 1px rgba(0, 0, 0, 0.45);
       }
 
       #${overlayId} .doomscroll-punisher-progress-bar {
         width: 100%;
         height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, #78a6ff 0%, #786dff 52%, #ba72ff 100%);
-        box-shadow: 0 0 24px rgba(112, 109, 255, 0.28);
-        transition: width 60s linear;
+        border-radius: 0;
+        background: #7d5cff;
+        box-shadow:
+          inset 0 -1px 0 rgba(46, 28, 108, 0.62),
+          inset 0 1px 0 rgba(208, 192, 255, 0.24);
+        image-rendering: pixelated;
+        transition: width 60s steps(120, end);
       }
 
       @media (max-width: 680px) {
         #${overlayId} .doomscroll-punisher-card {
-          width: min(620px, calc(100vw - 20px));
-          border-radius: 28px;
+          width: min(720px, calc(100vw - 14px));
+          border-radius: 6px;
+        }
+
+        #${overlayId} .doomscroll-punisher-body {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 24px;
         }
 
         #${overlayId} img {
-          width: min(300px, 100%);
-          max-height: 260px;
+          width: 146%;
+          height: 146%;
+        }
+
+        #${overlayId} .doomscroll-punisher-media-panel {
+          min-height: 280px;
         }
 
         #${overlayId} .doomscroll-punisher-progress-meta {
@@ -586,6 +408,7 @@
           transform: translateY(0) scale(1);
         }
       }
+
     `;
 
     document.documentElement.appendChild(style);
@@ -607,6 +430,59 @@
     audioElement.style.display = "none";
     document.documentElement.appendChild(audioElement);
     return audioElement;
+  }
+
+  function preloadAudioElement() {
+    try {
+      const audio = ensureAudio();
+      if (audio.readyState < 2) {
+        audio.load();
+      }
+    } catch (_error) {
+      // Ignore preload failures and fall back to other audio paths.
+    }
+  }
+
+  function preloadAudioBuffer() {
+    if (!AudioContextCtor || audioBuffer || audioBufferPromise) {
+      return audioBufferPromise;
+    }
+
+    audioContext = audioContext || new AudioContextCtor();
+    audioBufferPromise = fetch(audioUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Audio fetch failed: ${response.status}`);
+        }
+
+        return response.arrayBuffer();
+      })
+      .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer.slice(0)))
+      .then((decodedBuffer) => {
+        audioBuffer = decodedBuffer;
+        return decodedBuffer;
+      })
+      .catch(() => {
+        audioBufferPromise = null;
+        return null;
+      });
+
+    return audioBufferPromise;
+  }
+
+  function stopBufferSource() {
+    if (!activeBufferSource) {
+      return;
+    }
+
+    try {
+      activeBufferSource.stop();
+    } catch (_error) {
+      // Ignore stop races; the source may have already ended.
+    }
+
+    activeBufferSource.disconnect();
+    activeBufferSource = null;
   }
 
   function playFallbackTone() {
@@ -643,11 +519,14 @@
   }
 
   function playSound() {
-    try {
-      const audio = ensureAudio();
-      audio.pause();
+    const playAudioElement = () => {
+      try {
+        const audio = ensureAudio();
+        if (audio.readyState < 1) {
+          return false;
+        }
 
-      const startPlayback = () => {
+        audio.pause();
         audio.currentTime =
           Number.isFinite(audio.duration) && audio.duration > AUDIO_START_SECONDS
             ? AUDIO_START_SECONDS
@@ -659,33 +538,113 @@
             playFallbackTone();
           });
         }
+        return true;
+      } catch (_error) {
+        playFallbackTone();
+        return false;
+      }
+    };
+
+    const playBuffer = async () => {
+      if (!AudioContextCtor) {
+        return false;
+      }
+
+      if (!audioBuffer) {
+        return false;
+      }
+
+      audioContext = audioContext || new AudioContextCtor();
+      if (audioContext.state === "suspended") {
+        await audioContext.resume();
+      }
+
+      stopBufferSource();
+
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioContext.destination);
+
+      const startOffset =
+        audioBuffer.duration > AUDIO_START_SECONDS
+          ? AUDIO_START_SECONDS
+          : 0;
+
+      source.onended = () => {
+        if (activeBufferSource === source) {
+          activeBufferSource.disconnect();
+          activeBufferSource = null;
+        }
       };
 
-      if (audio.readyState >= 1) {
-        startPlayback();
-      } else {
-        audio.addEventListener("loadedmetadata", startPlayback, { once: true });
-        audio.load();
-      }
+      activeBufferSource = source;
+      source.start(0, startOffset);
+      return true;
+    };
+
+    if (audioBuffer) {
+      playBuffer().catch(() => {
+        if (!playAudioElement()) {
+          playFallbackTone();
+        }
+      });
+      return;
+    }
+
+    if (playAudioElement()) {
+      return;
+    }
+
+    preloadAudioElement();
+    preloadAudioBuffer();
+    playFallbackTone();
+  }
+
+  function stopSound() {
+    stopBufferSource();
+
+    if (!audioElement) {
+      return;
+    }
+
+    try {
+      audioElement.pause();
+      audioElement.currentTime = AUDIO_START_SECONDS;
     } catch (_error) {
-      playFallbackTone();
+      // Ignore teardown failures so the overlay can still clean up.
     }
   }
 
   function getShameEntry() {
     const hostname = window.location.hostname.replace(/^www\./i, "");
-    const matchedKey = Object.keys(SHAME_DATA).find(
+    const directKeys = Object.keys(SHAME_DATA).filter((key) => !key.startsWith("_"));
+    const matchedKey = directKeys.find(
       (key) => hostname === key || hostname.endsWith(`.${key}`)
     );
-    const entries = matchedKey ? [...SHAME_DATA[matchedKey]] : [];
+    const entries =
+      matchedKey && Array.isArray(SHAME_DATA[matchedKey])
+        ? [...SHAME_DATA[matchedKey]]
+        : [];
 
     if (matchedKey === "instagram.com" || matchedKey === "facebook.com") {
-      entries.push(...SHAME_DATA._scope.meta);
+      const metaScope = SHAME_DATA._scope && Array.isArray(SHAME_DATA._scope.meta)
+        ? SHAME_DATA._scope.meta
+        : [];
+      entries.push(...metaScope);
     }
 
     if (matchedKey === "linkedin.com") {
-      entries.push(...SHAME_DATA._scope.microsoft);
-      entries.push(...SHAME_DATA._people.bill_gates);
+      const microsoftScope =
+        SHAME_DATA._scope && Array.isArray(SHAME_DATA._scope.microsoft)
+          ? SHAME_DATA._scope.microsoft
+          : [];
+      const gatesEntries =
+        SHAME_DATA._people && Array.isArray(SHAME_DATA._people.bill_gates)
+          ? SHAME_DATA._people.bill_gates
+          : [];
+
+      entries.push(...microsoftScope);
+      entries.push(...gatesEntries);
     }
 
     if (!entries || entries.length === 0) {
@@ -698,7 +657,11 @@
     return entries[Math.floor(Math.random() * entries.length)];
   }
 
-  function formatShameDate(value) {
+  function formatShameDate(value, displayValue) {
+    if (displayValue) {
+      return displayValue;
+    }
+
     if (!value) {
       return "";
     }
@@ -721,34 +684,59 @@
     }).format(new Date(Date.UTC(year, month - 1, day)));
   }
 
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function getSourceMarkup(shameEntry) {
+    const sourceText = [
+      shameEntry.source,
+      formatShameDate(shameEntry.date, shameEntry.displayDate),
+    ]
+      .filter(Boolean)
+      .join(" / ");
+
+    if (!sourceText) {
+      return "";
+    }
+
+    const safeText = escapeHtml(sourceText);
+    if (!shameEntry.sourceUrl) {
+      return safeText;
+    }
+
+    return `
+      <a
+        class="doomscroll-punisher-source-link"
+        href="${escapeHtml(shameEntry.sourceUrl)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >${safeText}</a>
+    `;
+  }
+
   function showFeedback() {
     const now = performance.now();
+    const existingOverlay = ensureOverlay();
+    if (existingOverlay) {
+      return;
+    }
+
     if (now - state.lastFeedbackAt < FEEDBACK_COOLDOWN_MS) {
       return;
     }
 
     state.lastFeedbackAt = now;
-
-    const existingOverlay = ensureOverlay();
     window.clearTimeout(state.overlayTimer);
     window.clearInterval(state.overlayCountdownTimer);
 
-    if (existingOverlay) {
-      const existingProgressBar = existingOverlay.querySelector(
-        ".doomscroll-punisher-progress-bar"
-      );
-      if (existingProgressBar) {
-        existingProgressBar.style.transition = "none";
-        existingProgressBar.style.width = "100%";
-      }
-
-      existingOverlay.remove();
-    }
-
     const shameEntry = getShameEntry();
-    const sourceText = [shameEntry.source, formatShameDate(shameEntry.date)]
-      .filter(Boolean)
-      .join(" / ");
+    const sourceMarkup = getSourceMarkup(shameEntry);
 
     const overlay = document.createElement("div");
     overlay.id = overlayId;
@@ -762,9 +750,9 @@
         </div>
         <div class="doomscroll-punisher-body">
           <div class="doomscroll-punisher-copy">
-            <p class="doomscroll-punisher-intro">Before you keep going</p>
-            <p class="doomscroll-punisher-text">${shameEntry.text}</p>
-            <span class="doomscroll-punisher-source">${sourceText}</span>
+            <p class="doomscroll-punisher-intro">Resistance dispatch</p>
+            <p class="doomscroll-punisher-text">${escapeHtml(shameEntry.text)}</p>
+            <span class="doomscroll-punisher-source">${sourceMarkup}</span>
           </div>
           <div class="doomscroll-punisher-media">
             <div class="doomscroll-punisher-media-panel">
@@ -775,8 +763,8 @@
         <div class="doomscroll-punisher-footer">
           <div class="doomscroll-punisher-rule"></div>
           <div class="doomscroll-punisher-progress-meta">
-            <span class="doomscroll-punisher-progress-label">Reflection window</span>
-            <span class="doomscroll-punisher-progress-note">Read it before you try again</span>
+            <span class="doomscroll-punisher-progress-label">Signal hold</span>
+            <span class="doomscroll-punisher-progress-note">Hold position until the window clears</span>
           </div>
           <div class="doomscroll-punisher-progress">
             <div class="doomscroll-punisher-progress-bar"></div>
@@ -796,6 +784,22 @@
       image.src = fallbackImageUrl;
     });
 
+    const sourceLink = overlay.querySelector(".doomscroll-punisher-source-link");
+    if (sourceLink) {
+      const consumePointerEvent = (event) => {
+        event.stopPropagation();
+      };
+
+      sourceLink.addEventListener("pointerdown", consumePointerEvent);
+      sourceLink.addEventListener("mousedown", consumePointerEvent);
+      sourceLink.addEventListener("mouseup", consumePointerEvent);
+      sourceLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        window.open(shameEntry.sourceUrl, "_blank", "noopener,noreferrer");
+      });
+    }
+
     const countdown = overlay.querySelector(".doomscroll-punisher-countdown");
     const progressBar = overlay.querySelector(".doomscroll-punisher-progress-bar");
     const startedAt = Date.now();
@@ -806,7 +810,7 @@
         0,
         Math.ceil((OVERLAY_DURATION_MS - elapsedMs) / 1000)
       );
-      countdown.textContent = `${remainingSeconds}s left`;
+      countdown.textContent = `${remainingSeconds}s remaining`;
     }
 
     updateCountdown();
@@ -826,6 +830,7 @@
       state.overlayCountdownTimer = 0;
       progressBar.style.transition = "none";
       progressBar.style.width = "100%";
+      stopSound();
       overlay.remove();
     }, OVERLAY_DURATION_MS);
 
@@ -911,7 +916,6 @@
     element.style.setProperty("overflow-y", "hidden", "important");
     element.style.setProperty("overscroll-behavior", "none", "important");
     element.style.setProperty("scroll-behavior", "auto", "important");
-    element.style.setProperty("touch-action", "none", "important");
 
     restoreSnapshot(element);
   }
@@ -1077,6 +1081,9 @@
   wrapHistoryMethod("pushState");
   wrapHistoryMethod("replaceState");
 
+  preloadAudioElement();
+  preloadAudioBuffer();
+
   window.addEventListener("wheel", handleBlockedWheel, {
     capture: true,
     passive: false,
@@ -1092,6 +1099,8 @@
   window.addEventListener("keydown", handleBlockedKeydown, true);
   window.addEventListener("popstate", scheduleResnapshot);
   window.addEventListener("hashchange", scheduleResnapshot);
+  window.addEventListener("pagehide", stopSound);
+  window.addEventListener("beforeunload", stopSound);
   document.addEventListener("scroll", handleBlockedScroll, true);
 
   lockKnownScrollers();

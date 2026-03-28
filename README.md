@@ -55,5 +55,6 @@ If you ever want one-click installs from the browser store, that becomes a separ
 ## Customize the personality
 
 - Replace [assets/warning.gif](/S:/PROJECTS/doomscroll-watcher/assets/warning.gif) with your own GIF.
-- Replace [sounds/alert.wav](/S:/PROJECTS/doomscroll-watcher/sounds/alert.wav) with your own sound.
+- Replace [Underground Resistance - Electronic Warfare ( Vocal ).mp3](/S:/PROJECTS/doomscroll-watcher/assets/Underground%20Resistance%20-%20Electronic%20Warfare%20(%20Vocal%20).mp3) with your own sound.
+- Edit [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js) to add, remove, or rewrite facts without touching the UI/blocker logic.
 - Tweak the warning timings near the top of [content.js](/S:/PROJECTS/doomscroll-watcher/content.js).
