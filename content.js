@@ -13,6 +13,13 @@
   const RESNAPSHOT_DELAY_MS = 80;
   const SCAN_DEBOUNCE_MS = 150;
   const ROOT_LOCK_ATTRIBUTE = "data-doomscroll-punisher-root-locked";
+  const ALWAYS_BLOCKED_HOSTS = new Set([
+    "instagram.com",
+    "linkedin.com",
+    "facebook.com",
+  ]);
+  const YOUTUBE_HOST = "youtube.com";
+  const YOUTUBE_SHORTS_PATH_PATTERN = /^\/shorts(?:\/|$)/i;
   const KEYBOARD_SCROLL_KEYS = new Set([
     "ArrowDown",
     "ArrowUp",
@@ -50,6 +57,7 @@
     observer: null,
     audioElementUnlocked: false,
     audioPrimePromise: null,
+    routeActive: false,
   };
 
   let audioElement = null;
@@ -57,6 +65,27 @@
   let audioBuffer = null;
   let audioBufferPromise = null;
   let activeBufferSource = null;
+
+  function getCurrentHostname() {
+    return window.location.hostname.replace(/^www\./i, "").toLowerCase();
+  }
+
+  function isHostMatch(hostname, expectedHost) {
+    return hostname === expectedHost || hostname.endsWith(`.${expectedHost}`);
+  }
+
+  function shouldProtectCurrentRoute() {
+    const hostname = getCurrentHostname();
+    if ([...ALWAYS_BLOCKED_HOSTS].some((host) => isHostMatch(hostname, host))) {
+      return true;
+    }
+
+    if (isHostMatch(hostname, YOUTUBE_HOST)) {
+      return YOUTUBE_SHORTS_PATH_PATTERN.test(window.location.pathname || "/");
+    }
+
+    return false;
+  }
 
   function ensureStyle() {
     if (document.getElementById(styleId)) {
@@ -735,6 +764,21 @@
     }
   }
 
+  function clearOverlay() {
+    window.clearTimeout(state.overlayTimer);
+    state.overlayTimer = 0;
+    window.clearInterval(state.overlayCountdownTimer);
+    state.overlayCountdownTimer = 0;
+    window.clearInterval(state.progressBarTimer);
+    state.progressBarTimer = 0;
+    stopSound();
+
+    const overlay = document.getElementById(overlayId);
+    if (overlay) {
+      overlay.remove();
+    }
+  }
+
   function getShameEntry() {
     const hostname = window.location.hostname.replace(/^www\./i, "");
     const directKeys = Object.keys(SHAME_DATA).filter((key) => !key.startsWith("_"));
@@ -1030,6 +1074,38 @@
     }
   }
 
+  function restoreInlineStyle(element, propertyName, snapshot) {
+    const valueKey = `${propertyName}Value`;
+    const priorityKey = `${propertyName}Priority`;
+    const value = snapshot[valueKey];
+    const priority = snapshot[priorityKey];
+
+    if (value) {
+      element.style.setProperty(propertyName, value, priority || "");
+      return;
+    }
+
+    element.style.removeProperty(propertyName);
+  }
+
+  function unlockAllLockedElements() {
+    document.documentElement.removeAttribute(ROOT_LOCK_ATTRIBUTE);
+
+    for (const [element, snapshot] of state.lockedElements.entries()) {
+      if (!(element instanceof HTMLElement)) {
+        continue;
+      }
+
+      restoreInlineStyle(element, "overflow", snapshot);
+      restoreInlineStyle(element, "overflow-x", snapshot);
+      restoreInlineStyle(element, "overflow-y", snapshot);
+      restoreInlineStyle(element, "overscroll-behavior", snapshot);
+      restoreInlineStyle(element, "scroll-behavior", snapshot);
+    }
+
+    state.lockedElements.clear();
+  }
+
   function lockElement(element) {
     if (!(element instanceof HTMLElement)) {
       return;
@@ -1039,6 +1115,22 @@
       state.lockedElements.set(element, {
         top: element.scrollTop,
         left: element.scrollLeft,
+        overflowValue: element.style.getPropertyValue("overflow"),
+        overflowPriority: element.style.getPropertyPriority("overflow"),
+        "overflow-xValue": element.style.getPropertyValue("overflow-x"),
+        "overflow-xPriority": element.style.getPropertyPriority("overflow-x"),
+        "overflow-yValue": element.style.getPropertyValue("overflow-y"),
+        "overflow-yPriority": element.style.getPropertyPriority("overflow-y"),
+        "overscroll-behaviorValue": element.style.getPropertyValue(
+          "overscroll-behavior"
+        ),
+        "overscroll-behaviorPriority": element.style.getPropertyPriority(
+          "overscroll-behavior"
+        ),
+        "scroll-behaviorValue": element.style.getPropertyValue("scroll-behavior"),
+        "scroll-behaviorPriority": element.style.getPropertyPriority(
+          "scroll-behavior"
+        ),
       });
     }
 
@@ -1073,6 +1165,10 @@
   }
 
   function lockKnownScrollers() {
+    if (!state.routeActive) {
+      return;
+    }
+
     document.documentElement.setAttribute(ROOT_LOCK_ATTRIBUTE, "true");
     lockElement(document.documentElement);
 
@@ -1088,6 +1184,10 @@
   }
 
   function resnapshotLockedElements() {
+    if (!state.routeActive) {
+      return;
+    }
+
     for (const [element, snapshot] of state.lockedElements.entries()) {
       snapshot.top = element.scrollTop;
       snapshot.left = element.scrollLeft;
@@ -1096,6 +1196,10 @@
   }
 
   function scheduleScan() {
+    if (!state.routeActive) {
+      return;
+    }
+
     window.clearTimeout(state.scanTimer);
     state.scanTimer = window.setTimeout(() => {
       lockKnownScrollers();
@@ -1103,6 +1207,10 @@
   }
 
   function scheduleResnapshot() {
+    if (!state.routeActive) {
+      return;
+    }
+
     window.clearTimeout(state.resnapshotTimer);
     state.resnapshotTimer = window.setTimeout(() => {
       lockKnownScrollers();
@@ -1110,13 +1218,42 @@
     }, RESNAPSHOT_DELAY_MS);
   }
 
+  function syncProtectionState() {
+    const shouldBeActive = shouldProtectCurrentRoute();
+    if (state.routeActive === shouldBeActive) {
+      return shouldBeActive;
+    }
+
+    state.routeActive = shouldBeActive;
+
+    if (shouldBeActive) {
+      preloadAudioElement();
+      preloadAudioBuffer();
+      lockKnownScrollers();
+      scheduleResnapshot();
+      return true;
+    }
+
+    clearOverlay();
+    unlockAllLockedElements();
+    return false;
+  }
+
   function handleBlockedWheel(event) {
+    if (!syncProtectionState()) {
+      return;
+    }
+
     primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
   }
 
   function handleBlockedTouchMove(event) {
+    if (!syncProtectionState()) {
+      return;
+    }
+
     primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
@@ -1131,12 +1268,20 @@
       return;
     }
 
+    if (!syncProtectionState()) {
+      return;
+    }
+
     primeAudioForPlayback();
     showFeedback();
     swallowEvent(event);
   }
 
   function handleBlockedScroll(event) {
+    if (!syncProtectionState()) {
+      return;
+    }
+
     primeAudioForPlayback();
 
     const target =
@@ -1166,7 +1311,18 @@
   }
 
   function handleAudioUnlockGesture() {
+    if (!syncProtectionState()) {
+      return;
+    }
+
     primeAudioForPlayback(true);
+  }
+
+  function handleRouteChange() {
+    const isActive = syncProtectionState();
+    if (isActive) {
+      scheduleResnapshot();
+    }
   }
 
   function wrapHistoryMethod(methodName) {
@@ -1177,7 +1333,7 @@
 
     window.history[methodName] = function patchedHistoryMethod(...args) {
       const result = originalMethod.apply(this, args);
-      window.setTimeout(scheduleResnapshot, 0);
+      window.setTimeout(handleRouteChange, 0);
       return result;
     };
   }
@@ -1188,6 +1344,8 @@
     }
 
     state.observer = new MutationObserver((mutations) => {
+      syncProtectionState();
+
       let needsScan = false;
 
       for (const mutation of mutations) {
@@ -1221,8 +1379,7 @@
   wrapHistoryMethod("pushState");
   wrapHistoryMethod("replaceState");
 
-  preloadAudioElement();
-  preloadAudioBuffer();
+  syncProtectionState();
 
   window.addEventListener("pointerdown", handleAudioUnlockGesture, true);
   window.addEventListener("pointerup", handleAudioUnlockGesture, true);
@@ -1255,13 +1412,15 @@
     passive: false,
   });
   window.addEventListener("keydown", handleBlockedKeydown, true);
-  window.addEventListener("popstate", scheduleResnapshot);
-  window.addEventListener("hashchange", scheduleResnapshot);
+  window.addEventListener("popstate", handleRouteChange);
+  window.addEventListener("hashchange", handleRouteChange);
+  document.addEventListener("yt-navigate-start", handleRouteChange, true);
+  document.addEventListener("yt-navigate-finish", handleRouteChange, true);
+  document.addEventListener("yt-page-data-updated", handleRouteChange, true);
   window.addEventListener("pagehide", stopSound);
   window.addEventListener("beforeunload", stopSound);
   document.addEventListener("scroll", handleBlockedScroll, true);
 
-  lockKnownScrollers();
   startObserver();
-  scheduleResnapshot();
+  handleRouteChange();
 })();
