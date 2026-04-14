@@ -1,60 +1,63 @@
 # Doomscroll Punisher
 
-Small Chromium/Brave extension that hard-locks scrolling on Instagram, LinkedIn, and Facebook and throws a loud visual/audio warning when you try anyway.
+Small desktop Chromium extension that blocks scrolling on a short list of high-risk routes and interrupts the attempt with a full-screen warning.
 
-## Current rules
+## What it targets
 
-- Scroll is blocked immediately on every matched site.
-- No grace period, no timing budget, no page exceptions.
-- The extension keeps locking newly created feed/message containers as the page changes.
-- A short visual/audio warning appears when you try to scroll.
+- `instagram.com`: all routes
+- `facebook.com`: all routes
+- `linkedin.com`: all routes
+- `youtube.com/shorts/*`: only Shorts, not the rest of YouTube
 
-The warning uses local bundled assets only, so it works offline and stays identical across Windows and Linux.
+## How it behaves
 
-## Install in Brave or Chromium
+- Scrolling is hard-blocked on active targets.
+- A `60s` modal appears on the first blocked attempt.
+- The modal shows a rotating fact from a local fact bank in [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js).
+- The source line is clickable.
+- Audio is bundled locally and starts from `0:43` in [Underground Resistance - Electronic Warfare ( Vocal ).mp3](/S:/PROJECTS/doomscroll-watcher/assets/Underground%20Resistance%20-%20Electronic%20Warfare%20(%20Vocal%20).mp3).
+- Route-aware sites keep working as SPAs. For example, YouTube is only blocked on `/shorts`, and normal YouTube should unlock again when you leave Shorts.
+
+Everything is local to the extension. There is no backend, no account, and no remote fetch for facts or media.
+
+## Repo layout
+
+- [manifest.json](/S:/PROJECTS/doomscroll-watcher/manifest.json): extension entrypoint and site matching
+- [content.js](/S:/PROJECTS/doomscroll-watcher/content.js): blocker, modal, audio, route handling
+- [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js): fact bank
+- [assets](/S:/PROJECTS/doomscroll-watcher/assets): image, audio, icons, fallbacks
+
+## Install
 
 1. Open `brave://extensions` or `chrome://extensions`.
-2. Enable **Developer mode**.
-3. Click **Load unpacked**.
+2. Enable `Developer mode`.
+3. Click `Load unpacked`.
 4. Select this folder: `doomscroll-watcher`.
 
-## Keep it in git
-
-If this folder is not already a repo:
-
-```powershell
-git init
-git add .
-git commit -m "Initial doomscroll punisher extension"
-```
-
-On another machine:
+## Update on another machine
 
 ```powershell
 git clone <your-repo-url>
 ```
 
-After updates:
+After later changes:
 
 ```powershell
 git pull
 ```
 
-Then refresh the extension card in `brave://extensions`.
+Then refresh the extension card in the browser extensions page.
 
-## Share with friends
+## Customize
 
-The simplest unpublished flow is:
+- Edit [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js) to change or expand the fact bank.
+- Replace [UR.jpeg](/S:/PROJECTS/doomscroll-watcher/assets/UR.jpeg) if you want different modal art.
+- Replace [Underground Resistance - Electronic Warfare ( Vocal ).mp3](/S:/PROJECTS/doomscroll-watcher/assets/Underground%20Resistance%20-%20Electronic%20Warfare%20(%20Vocal%20).mp3) if you want different audio.
+- If the audio start point changes, update `AUDIO_START_SECONDS` in [content.js](/S:/PROJECTS/doomscroll-watcher/content.js).
+- If you want to change timing, edit the constants near the top of [content.js](/S:/PROJECTS/doomscroll-watcher/content.js).
 
-- Put this repo on GitHub, GitLab, or a private git remote.
-- Friends clone it or download the ZIP.
-- They use **Load unpacked** in Brave/Chromium.
+## Notes
 
-If you ever want one-click installs from the browser store, that becomes a separate packaging/publishing step.
-
-## Customize the personality
-
-- Replace [assets/warning.gif](/S:/PROJECTS/doomscroll-watcher/assets/warning.gif) with your own GIF.
-- Replace [Underground Resistance - Electronic Warfare ( Vocal ).mp3](/S:/PROJECTS/doomscroll-watcher/assets/Underground%20Resistance%20-%20Electronic%20Warfare%20(%20Vocal%20).mp3) with your own sound.
-- Edit [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js) to add, remove, or rewrite facts without touching the UI/blocker logic.
-- Tweak the warning timings near the top of [content.js](/S:/PROJECTS/doomscroll-watcher/content.js).
+- This is built for desktop Chromium browsers such as Brave, Chrome, Edge, Opera, and Vivaldi.
+- Mobile support is not the target.
+- On some signed-out or login pages, browsers can still restrict autoplay until the page has seen a real click, tap, or key press. The extension already tries to unlock audio on those interactions.
