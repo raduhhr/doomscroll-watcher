@@ -13,8 +13,8 @@ Small desktop Chromium extension that blocks scrolling on a short list of high-r
 
 - Scrolling is hard-blocked on active targets.
 - A `60s` modal appears on the first blocked attempt.
-- The modal shows a rotating fact from a local fact bank in [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js).
-- The source line is clickable.
+- The modal shows a rotating tongue-in-cheek interruption line.
+- The button and source line still open a random article from the local fact bank in [shame-data.js](/S:/PROJECTS/doomscroll-watcher/shame-data.js).
 - Audio is bundled locally and starts from `0:43` in [Underground Resistance - Electronic Warfare ( Vocal ).mp3](/S:/PROJECTS/doomscroll-watcher/assets/Underground%20Resistance%20-%20Electronic%20Warfare%20(%20Vocal%20).mp3).
 - Route-aware sites keep working as SPAs. For example, YouTube is only blocked on `/shorts`, and normal YouTube should unlock again when you leave Shorts.
 

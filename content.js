@@ -30,6 +30,32 @@
     " ",
   ]);
   const SHAME_DATA = window.__doomscrollPunisherShameData || {};
+  const TONGUE_IN_CHEEK_LINES = [
+    "Your liked videos do not require hourly pastoral care.",
+    "The feed is not a Tamagotchi.",
+    "Nothing down there will fix your life in the next 14 seconds.",
+    "The algorithm has had enough of your beautiful mind for one minute.",
+    "You can resume being perceived later.",
+    "Your timeline will continue inventing nonsense without supervision.",
+    "That next scroll is not the one.",
+    "No emergency has ever been solved by checking three more reels.",
+    "The slop will keep until morning.",
+    "This is an intervention staged by your future self.",
+    "Put the shovel down. The hole is deep enough.",
+    "The dopamine mine is closed for maintenance.",
+    "Even the app thinks you should log off for a second.",
+    "Your attention span is being mugged in broad daylight.",
+    "You came for one video and opened a portal.",
+    "The feed is a hallway with no final room.",
+    "This is not research.",
+    "The algorithm loves that you call it 'just one minute.'",
+    "The next swipe is sponsored by regret.",
+    "You are not missing lore. You are being farmed.",
+    "Please stop donating your frontal lobe to autoplay.",
+    "Your watch history has enough material already.",
+    "The infinite scroll is winning on technicality.",
+    "Go hydrate. The feed will still be weird when you get back.",
+  ];
   const runtimeApi = globalThis.chrome?.runtime || globalThis.browser?.runtime;
 
   if (!runtimeApi || typeof runtimeApi.getURL !== "function") {
@@ -284,6 +310,45 @@
         font-family: "Consolas", "Lucida Console", "Courier New", monospace;
       }
 
+      #${overlayId} .doomscroll-punisher-source-actions {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px 14px;
+      }
+
+      #${overlayId} .doomscroll-punisher-source-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 0 14px;
+        border: 1px solid rgba(229, 222, 236, 0.22);
+        background: rgba(255, 255, 255, 0.06);
+        color: #ebe6ef;
+        text-decoration: none;
+        pointer-events: auto !important;
+        touch-action: auto;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-family: "Consolas", "Lucida Console", "Courier New", monospace;
+        transition:
+          background 120ms ease,
+          border-color 120ms ease,
+          color 120ms ease;
+      }
+
+      #${overlayId} .doomscroll-punisher-source-button:hover,
+      #${overlayId} .doomscroll-punisher-source-button:focus-visible {
+        background: rgba(125, 92, 255, 0.18);
+        border-color: rgba(160, 137, 255, 0.46);
+        color: #f4eff8;
+        outline: none;
+      }
+
       #${overlayId} .doomscroll-punisher-media {
         display: flex;
         justify-content: center;
@@ -419,6 +484,10 @@
 
         #${overlayId} .doomscroll-punisher-progress-note {
           text-align: left;
+        }
+
+        #${overlayId} .doomscroll-punisher-source-actions {
+          align-items: flex-start;
         }
       }
 
@@ -812,6 +881,14 @@
     }
 
     if (!entries || entries.length === 0) {
+      const allEntries = directKeys.flatMap((key) =>
+        Array.isArray(SHAME_DATA[key]) ? SHAME_DATA[key] : []
+      );
+
+      if (allEntries.length > 0) {
+        return allEntries[Math.floor(Math.random() * allEntries.length)];
+      }
+
       return {
         text: "You are being watched by an algorithm right now.",
         source: "",
@@ -819,6 +896,12 @@
     }
 
     return entries[Math.floor(Math.random() * entries.length)];
+  }
+
+  function getTongueInCheekLine() {
+    return TONGUE_IN_CHEEK_LINES[
+      Math.floor(Math.random() * TONGUE_IN_CHEEK_LINES.length)
+    ];
   }
 
   function formatShameDate(value, displayValue) {
@@ -875,12 +958,20 @@
     }
 
     return `
-      <a
-        class="doomscroll-punisher-source-link"
-        href="${escapeHtml(shameEntry.sourceUrl)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >${safeText}</a>
+      <span class="doomscroll-punisher-source-actions">
+        <a
+          class="doomscroll-punisher-source-button"
+          href="${escapeHtml(shameEntry.sourceUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Show receipt</a>
+        <a
+          class="doomscroll-punisher-source-link"
+          href="${escapeHtml(shameEntry.sourceUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >${safeText}</a>
+      </span>
     `;
   }
 
@@ -901,6 +992,7 @@
     window.clearInterval(state.progressBarTimer);
 
     const shameEntry = getShameEntry();
+    const interventionLine = getTongueInCheekLine();
     const sourceMarkup = getSourceMarkup(shameEntry);
 
     const overlay = document.createElement("div");
@@ -916,7 +1008,7 @@
         <div class="doomscroll-punisher-body">
           <div class="doomscroll-punisher-copy">
             <p class="doomscroll-punisher-intro">Resistance dispatch</p>
-            <p class="doomscroll-punisher-text">${escapeHtml(shameEntry.text)}</p>
+            <p class="doomscroll-punisher-text">${escapeHtml(interventionLine)}</p>
             <span class="doomscroll-punisher-source">${sourceMarkup}</span>
           </div>
           <div class="doomscroll-punisher-media">
@@ -949,19 +1041,23 @@
       image.src = fallbackImageUrl;
     });
 
-    const sourceLink = overlay.querySelector(".doomscroll-punisher-source-link");
-    if (sourceLink) {
+    const sourceLinks = overlay.querySelectorAll(
+      ".doomscroll-punisher-source-link, .doomscroll-punisher-source-button"
+    );
+    if (sourceLinks.length > 0) {
       const consumePointerEvent = (event) => {
         event.stopPropagation();
       };
 
-      sourceLink.addEventListener("pointerdown", consumePointerEvent);
-      sourceLink.addEventListener("mousedown", consumePointerEvent);
-      sourceLink.addEventListener("mouseup", consumePointerEvent);
-      sourceLink.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        window.open(shameEntry.sourceUrl, "_blank", "noopener,noreferrer");
+      sourceLinks.forEach((sourceLink) => {
+        sourceLink.addEventListener("pointerdown", consumePointerEvent);
+        sourceLink.addEventListener("mousedown", consumePointerEvent);
+        sourceLink.addEventListener("mouseup", consumePointerEvent);
+        sourceLink.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          window.open(shameEntry.sourceUrl, "_blank", "noopener,noreferrer");
+        });
       });
     }
 
